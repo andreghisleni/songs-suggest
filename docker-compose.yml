@@ -1,0 +1,24 @@
+version: '3.8' # Ou uma versão mais recente compatível
+
+services:
+  # Serviço da sua API
+  api:
+    build: . # Indica que o Docker Compose deve construir a imagem a partir do Dockerfile na pasta atual
+    container_name: song-suggest-api # Nomeia o container (opcional)
+    ports:
+      - "6363:6363" # Mapeia a porta 6363 do container para a porta 6363 da sua máquina host
+    env_file:
+      - .env # Carrega as variáveis de ambiente do seu arquivo .env
+    environment:
+      # Garanta que a DATABASE_URL no seu arquivo .env use 'postgresql' como hostname:
+      # DATABASE_URL=postgresql://postgres:docker@postgresql:5432/songs-suggester
+      # Outras variáveis podem ser definidas aqui também, se necessário, ou mantidas no .env
+      NODE_ENV: development # Exemplo: defina o ambiente
+      DATABASE_URL: postgres://postgres:DZV3EgCt6W08VxEiJ1pvtv4bAYbZ8YKcme06SduOFz1xuH8nEuBWVJGZ4trhQYmT@100.42.176.36:5432/postgres
+    networks: # Opcional, mas bom para ser explícito. Docker Compose cria uma rede padrão se não especificado.
+      - minha-rede-app
+
+# Define as redes personalizadas (opcional se estiver satisfeito com a rede padrão do Compose)
+networks:
+  minha-rede-app:
+    driver: bridge

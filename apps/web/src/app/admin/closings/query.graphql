@@ -1,0 +1,66 @@
+query getAllClosings($filter: FilterInput) {
+  closings(filter: $filter) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+  getTotalClosings(filter: $filter)
+}
+
+subscription closingUpdated {
+  closingUpdated {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createClosing($phone: String, $quantity: Float) {
+  createClosing(phone: $phone, quantity: $quantity) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}
+
+mutation reRunClosing($closingId: String!) {
+  reRunClosing(id: $closingId) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}
+
+mutation reRunClosingWithError($closingId: String!) {
+  reRunClosingWithError(id: $closingId) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}
+
+mutation downloadSaleData($externalId: String!, $phone: String) {
+  downloadSaleData(externalId: $externalId, phone: $phone) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}

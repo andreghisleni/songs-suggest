@@ -1,0 +1,44 @@
+{
+  "eslint.workingDirectories": [
+    {
+      "mode": "auto"
+    }
+  ],
+  "cSpell.words": [
+    "barberpole",
+    "bunnycdn",
+    "casl",
+    "celesc",
+    "cloudflare",
+    "dayjs",
+    "eden",
+    "elysia",
+    "Gestao",
+    "gl",
+    "hookform",
+    "immer",
+    "Immer",
+    "inngest",
+    "kutt",
+    "Kutt",
+    "Marcon",
+    "neondatabase",
+    "NEXTAUTH",
+    "nextjs",
+    "openai",
+    "PANDAVIDEO",
+    "pconsulta",
+    "presigner",
+    "qstash",
+    "QSTASH",
+    "responsibles",
+    "SCOUTIST",
+    "sicredi",
+    "superjson",
+    "tanstack",
+    "trpc",
+    "upstash",
+    "webvtt",
+    "whatsapp"
+  ]
+}

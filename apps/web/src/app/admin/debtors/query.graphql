@@ -1,0 +1,44 @@
+query getAllDebtors($filter: FilterInput) {
+  debtors(filter: $filter) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+  getTotalDebtors(filter: $filter)
+}
+
+subscription debtorUpdated {
+  debtorUpdated {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createDebtor($daysToCheck: Float) {
+  createDebtor(daysToCheck: $daysToCheck) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}
+
+mutation reRunDebtor($debtorId: String!) {
+  reRunDebtor(id: $debtorId) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}

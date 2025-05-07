@@ -1,0 +1,11 @@
+[
+  {
+    "subdomain": "admin"
+  },
+  {
+    "subdomain": "app"
+  },
+  {
+    "subdomain": "xapeco"
+  }
+]

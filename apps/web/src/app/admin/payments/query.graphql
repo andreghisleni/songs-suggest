@@ -1,0 +1,43 @@
+query GetAllPayments($filter: FiltersPaymentInput!) {
+  payments(filter: $filter) {
+    id
+    sale {
+      externalId
+      clientName
+    }
+    value
+    status
+    method
+    releasedAt
+    releasedBy {
+      id
+      name
+    }
+    createdAt
+    updatedAt
+
+    externalId
+
+    requests {
+      id
+      merchantOrderId
+      data
+      createdAt
+    }
+
+    webhooks {
+      id
+      data
+      createdAt
+    }
+  }
+
+  getTotalPayments(filter: $filter)
+}
+
+mutation UpdatePaymentReleasedDate($id: String!) {
+  updatePaymentReleasedDate(paymentId: $id) {
+    id
+    releasedAt
+  }
+}

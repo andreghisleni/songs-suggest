@@ -1,0 +1,43 @@
+query getAllSalesFromClosing($filter: FilterInput, $closingId: String!) {
+  closing(id: $closingId) {
+    id
+    sales(filter: $filter) {
+      id
+      externalId
+      code
+      shortId
+      clientName
+      clientPhone
+      status
+      createdAt
+      updatedAt
+    }
+    totalSales(filter: $filter)
+  }
+  getTotalClosings(filter: $filter)
+}
+
+subscription saleUpdated($ids: [String!]!) {
+  saleUpdated(ids: $ids) {
+    id
+    externalId
+    shortId
+    clientName
+    clientPhone
+    status
+    createdAt
+    updatedAt
+  }
+}
+
+mutation reprocessSale($saleId: String!) {
+  reprocess(id: $saleId) {
+    id
+    externalId
+    clientName
+    clientPhone
+    status
+    createdAt
+    updatedAt
+  }
+}

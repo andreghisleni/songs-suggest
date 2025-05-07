@@ -1,0 +1,50 @@
+query getAllSalesFromDebtor($filter: FilterInput, $debtorId: String!) {
+  debtor(id: $debtorId) {
+    id
+    status
+    sales(filter: $filter) {
+      id
+      externalId
+      clientName
+      clientPhone
+      totalValue
+      totalReceived
+      date
+      status
+      createdAt
+      updatedAt
+    }
+    totalSales(filter: $filter)
+  }
+  getTotalDebtors(filter: $filter)
+}
+
+subscription saleFromDebtorUpdated($ids: [String!]!) {
+  debtorSaleUpdated(ids: $ids) {
+    id
+    externalId
+    clientName
+    clientPhone
+    totalValue
+    totalReceived
+    date
+    status
+    createdAt
+    updatedAt
+  }
+}
+
+mutation deleteSaleFromDebtor($id: String!) {
+  deleteDebtorSale(id: $id)
+}
+
+mutation processDebtor($id: String!) {
+  processDebtor(id: $id) {
+    id
+    status
+    totalDebits
+    totalSent
+    createdAt
+    updatedAt
+  }
+}

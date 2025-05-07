@@ -1,0 +1,22 @@
+{
+  "name": "full-stack",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev dev:cg prisma:s --parallel --",
+    "dev:cg": "turbo run dev:cg --parallel --",
+    "start": "turbo run start --",
+    "build": "turbo run build --",
+    "lint": "turbo run lint --",
+    "format": "turbo run format --",
+    "prisma:g": "turbo run prisma:g --",
+    "prisma:m": "turbo run prisma:m --",
+    "prisma:s": "turbo run prisma:s --"
+  },
+  "devDependencies": {
+    "turbo": "2.0.14"
+  },
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "@full-stack/tsconfig/nest2.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@db/client": [
+        "src/shared/database/client"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "./prisma/*.ts"]
+}

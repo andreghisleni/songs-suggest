@@ -1,0 +1,20 @@
+query GetWhatsappEndMessage {
+  whatsappEndMessages {
+    id
+    message
+  }
+}
+
+mutation CreateWhatsappEndMessage($input: CreateWhatsappEndMessageInput!) {
+  createWhatsappEndMessage(input: $input) {
+    id
+    message
+  }
+} 
+
+mutation UpdateWhatsappEndMessage($input: UpdateWhatsappEndMessageInput!) {
+  updateWhatsappEndMessage(input: $input) {
+    id
+    message
+  }
+}
