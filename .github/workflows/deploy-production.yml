@@ -42,4 +42,4 @@ jobs:
         run: pnpm install
 
       - name: Run Prisma Migrate
-        run: pnpm prisma:mp
+        run: pnpm run prisma:mp
