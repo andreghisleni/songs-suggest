@@ -10,6 +10,7 @@
     "format": "turbo run format --",
     "prisma:g": "turbo run prisma:g --",
     "prisma:m": "turbo run prisma:m --",
+    "prisma:mp": "turbo run prisma:mp --",
     "prisma:s": "turbo run prisma:s --"
   },
   "devDependencies": {

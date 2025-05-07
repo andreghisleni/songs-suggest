@@ -12,6 +12,7 @@
     "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
     "prisma:g": "prisma generate",
     "prisma:m": "pnpm env:load prisma migrate dev",
+    "prisma:mp": "pnpm env:load prisma migrate deploy",
     "prisma:s": "pnpm env:load prisma studio",
     "prisma:se": "pnpm env:load prisma db seed",
     "env:load": "dotenv -e ../../.env --"

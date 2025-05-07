@@ -31,6 +31,11 @@
     },
     "prisma:s": {
       "dependsOn": ["^prisma:s"]
+    },
+    "prisma:mp": {
+      "dependsOn": [
+        "^prisma:mp"
+      ]
     }
   }
 }
