@@ -5,6 +5,9 @@ import { PubSubService } from '@/shared/subscription/pubSub.service';
 import { Injectable } from '@nestjs/common';
 import { GraphQLError } from 'graphql';
 
+import { CreateEventInput } from './dto/create-event.input';
+import { UpdateEventInput } from './dto/update-event.input';
+
 function generateShortId(): string {
   const characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let shortId = '';
@@ -24,75 +27,15 @@ export class EventsService {
     private readonly env: EnvService,
   ) {}
 
-  // async create(event: EventGestao, closingId: string, phone?: string) {
-  //   const shortId = generateShortId();
+  async create(input: CreateEventInput) {
+    const eventCreated = await this.prisma.event.create({
+      data: {
+        ...input,
+      },
+    });
 
-  //   const eventCreated = await this.prisma.event.create({
-  //     data: {
-  //       shortId,
-  //       externalId: event.id,
-  //       code: event.code,
-  //       clientName: event.client.name,
-  //       clientPhone: event.client.phone,
-  //       totalProducts: event.total.products,
-  //       totalValue: event.total.total,
-  //       totalReceived: event.total.received,
-  //       status: 'PENDING',
-  //       closing: {
-  //         connect: {
-  //           id: closingId,
-  //         },
-  //       },
-  //     },
-  //   });
-
-  //   await this.tasksQueue.add('send-whatsApp-message', {
-  //     closingId,
-  //     event: eventCreated,
-  //     phone,
-  //   });
-
-  //   return eventCreated;
-  // }
-
-  // async reprocess(id: string, phone?: string) {
-  //   const event = await this.findById(id);
-
-  //   await this.tasksQueue2.add('get-event-to-reprocess-data', {
-  //     event,
-  //     closingId: event.closingId,
-  //     phone,
-  //   });
-
-  //   return event;
-  // }
-
-  // async updateData(event: EventGestao, eventId: string, closingId: string, phone?: string) {
-  //   const shortId = generateShortId();
-
-  //   const eventUpdated = await this.prisma.event.update({
-  //     where: {
-  //       id: eventId,
-  //     },
-  //     data: {
-  //       shortId,
-  //       clientName: event.client.name,
-  //       clientPhone: event.client.phone,
-  //       totalProducts: event.total.products,
-  //       totalValue: event.total.total,
-  //       totalReceived: event.total.received,
-  //       status: 'PENDING',
-  //     },
-  //   });
-
-  //   await this.tasksQueue.add('send-whatsApp-message', {
-  //     closingId,
-  //     event: eventUpdated,
-  //     phone,
-  //   });
-
-  //   return eventUpdated;
-  // }
+    return eventCreated;
+  }
 
   async findAll(filter: FilterInput) {
     return this.prisma.event.findMany({
@@ -172,76 +115,68 @@ export class EventsService {
     return event;
   }
 
-  // async findByShortId(shortId: string) {
-  //   const event = await this.prisma.event.findFirst({
-  //     where: { shortId },
-  //   });
+  async findBySlug(slug: string) {
+    const event = await this.prisma.event.findFirst({
+      where: { slug },
+    });
 
-  //   if (!event) {
-  //     throw new GraphQLError('Event not found', {
-  //       extensions: {
-  //         code: 400,
-  //       },
-  //     });
-  //   }
+    if (!event) {
+      throw new GraphQLError('Event not found', {
+        extensions: {
+          code: 400,
+        },
+      });
+    }
 
-  //   return event;
-  // }
+    return event;
+  }
 
-  // async findByExternalId(externalId: string) {
-  //   throw new Error('Method not implemented.');
-  //   // const response = await axios.get(`${this.env.get('API_LEGADO_URL')}/debtors/${externalId}`, {
-  //   //   headers: {
-  //   //     apiKey: this.env.get('API_LEGADO_KEY'),
-  //   //   },
-  //   // });
+  async update(input: UpdateEventInput) {
+    const eventExists = await this.prisma.event.findUnique({
+      where: { id: input.id },
+    });
 
-  //   // const debtor = eventSchema.safeParse(response.data);
+    if (!eventExists) {
+      throw new GraphQLError('Event not found', {
+        extensions: {
+          code: 400,
+        },
+      });
+    }
+    const eventUpdated = await this.prisma.event.update({
+      where: { id: input.id },
+      data: {
+        ...input,
+      },
+    });
 
-  //   // console.log('error', debtor.error);
+    await this.pubSub.publish('eventUpdated', eventUpdated);
 
-  //   // if (!debtor.success) {
-  //   //   throw new GraphQLError('Event not found', {
-  //   //     extensions: {
-  //   //       code: 400,
-  //   //     },
-  //   //   });
-  //   // }
+    return eventUpdated;
+  }
 
-  //   // return debtor.data;
-  // }
+  async toggleIsOpenedToReceiveSuggestions(id: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id },
+    });
 
-  // async update(
-  //   id: string,
-  //   status: 'MESSAGE_SENDING' | 'MESSAGE_SENT' | 'ERROR_DURING_MESSAGE_SENDING',
-  //   error?: string[],
-  // ) {
-  //   const event = await this.prisma.event.update({
-  //     where: {
-  //       id,
-  //     },
-  //     data: {
-  //       status,
-  //       error,
-  //     },
-  //   });
-  //   await this.pubSub.publish('eventUpdated', event);
-  // }
+    if (!event) {
+      throw new GraphQLError('Event not found', {
+        extensions: {
+          code: 400,
+        },
+      });
+    }
 
-  // async closing(eventId: string) {
-  //   return this.prisma.event
-  //     .findUnique({
-  //       where: { id: eventId },
-  //     })
-  //     .closing();
-  // }
+    const eventUpdated = await this.prisma.event.update({
+      where: { id },
+      data: {
+        isOpenedToReceiveSuggestions: !event.isOpenedToReceiveSuggestions,
+      },
+    });
 
-  // async payments(eventId: string) {
-  //   console.log(eventId);
-  //   return this.prisma.event
-  //     .findUnique({
-  //       where: { id: eventId },
-  //     })
-  //     .payments();
-  // }
+    await this.pubSub.publish('eventUpdated', eventUpdated);
+
+    return eventUpdated;
+  }
 }

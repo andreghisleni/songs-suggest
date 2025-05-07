@@ -44,6 +44,13 @@
   --color-sidebar-border: hsl(var(--sidebar-border));
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
+  --color-spotify-green: var(--spotify-green);
+  --color-spotify-dark: var(--spotify-dark);
+  --color-spotify-light-dark: var(--spotify-light-dark);
+  --color-spotify-gray: var(--spotify-gray);
+  --color-spotify-light-gray: var(--spotify-light-gray);
+  --color-spotify-text: var(--spotify-text);
+
   --background-image-barberpole: repeating-linear-gradient(
     -45deg,
     transparent,
@@ -175,6 +182,13 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --spotify-green: #1DB954;
+    --spotify-dark: #121212;
+    --spotify-light-dark: #181818;
+    --spotify-gray: #282828;
+    --spotify-light-gray: #B3B3B3;
+    --spotify-text: #FFFFFF;
   }
 
   .dark {--background: 20 14.3% 4.1%;

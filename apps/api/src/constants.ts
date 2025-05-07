@@ -1,13 +1,13 @@
 export const constants = {
-  APP_NAME: 'Financeiro Marcon Numismática',
+  APP_NAME: 'Songs suggestions',
   mail: {
     from: {
-      name: 'Equipe Financeiro Marcon Numismática',
+      name: 'Equipe Songs suggestions',
       email: 'envio@andreg.com.br',
     },
   },
   company: {
-    name: 'Financeiro Marcon Numismática',
+    name: 'Songs suggestions',
     address: '',
   },
 };

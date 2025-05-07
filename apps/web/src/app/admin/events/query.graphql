@@ -1,0 +1,51 @@
+query getAllEvents($filter: FilterInput) {
+  events(filter: $filter) {
+    id
+
+    name
+    description
+    slug
+    logo
+    banner
+    isOpenedToReceiveSuggestions
+    isPeopleSequenceSuggestLimitable
+    numberOfPeopleSequenceSuggestLimit
+
+    createdAt
+    updatedAt
+  }
+  getTotalEvents(filter: $filter)
+}
+
+subscription eventUpdated ($slug: String!) {
+  eventUpdated(slug: $slug) {
+    id
+    createdAt
+    updatedAt
+  }
+}
+
+mutation createEvent($input: CreateEventInput!) {
+  createEvent(input: $input) {
+    id
+    createdAt
+    updatedAt
+  }
+}
+
+mutation updateEvent($input: UpdateEventInput!) {
+  updateEvent(input: $input) {
+    id
+    createdAt
+    updatedAt
+  }
+}
+
+mutation toggleEventIsOpenedToReceiveSuggestions($id: String!) {
+  toggleEventIsOpenedToReceiveSuggestions(id: $id) {
+    id
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+  }
+}

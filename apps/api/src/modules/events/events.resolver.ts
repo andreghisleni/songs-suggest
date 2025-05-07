@@ -2,9 +2,11 @@ import { FilterInput, FilterSchema } from '@/filter-input';
 import { Public } from '@/shared/auth/public.decorator';
 import { CheckPoliciesApp } from '@/shared/casl/policies.types';
 import { PubSubService } from '@/shared/subscription/pubSub.service';
-import { Args, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { ZodArgs } from 'nestjs-graphql-zod';
 
+import { CreateEventInput, CreateEventSchema } from './dto/create-event.input';
+import { UpdateEventInput, UpdateEventSchema } from './dto/update-event.input';
 import { Event } from './entities/event.entity';
 import { EventsService } from './events.service';
 
@@ -21,11 +23,44 @@ export class EventsResolver {
   @Subscription(() => Event, {
     resolve: (value: Event) => value,
     filter: (payload, variables) => {
-      return !(variables.ids as string[]).includes(payload.id);
+      // return variables.slug !== payload.slug;
+
+      console.log('payload', payload);
+      console.log('variables', variables);
+
+      if (payload.slug !== variables.slug) {
+        return false;
+      }
+
+      return true;
     },
   })
-  eventUpdated(@Args('ids', { type: () => [String] }) id: string[]) {
+  eventUpdated(@Args('slug', { type: () => String }) slug: string) {
     return this.pubSub.asyncIterableIterator('eventUpdated');
+  }
+
+  @CheckPoliciesApp(a => a.can('create', 'Event'))
+  @Mutation(() => Event)
+  createEvent(
+    @ZodArgs(CreateEventSchema, 'input', {
+      name: 'CreateEventInput',
+      description: 'Create a new collective sale',
+    })
+    input: CreateEventInput,
+  ) {
+    return this.eventsService.create(input);
+  }
+
+  @CheckPoliciesApp(a => a.can('update', 'Event'))
+  @Mutation(() => Event)
+  updateEvent(@ZodArgs(UpdateEventSchema, 'input') input: UpdateEventInput) {
+    return this.eventsService.update(input);
+  }
+
+  @CheckPoliciesApp(a => a.can('create', 'Closing'))
+  @Mutation(() => Event)
+  async toggleEventIsOpenedToReceiveSuggestions(@Args('id', { type: () => String }) id: string) {
+    return this.eventsService.toggleIsOpenedToReceiveSuggestions(id);
   }
 
   @CheckPoliciesApp(a => a.can('get-all', 'Event'))
@@ -73,15 +108,6 @@ export class EventsResolver {
   // // findByExternalId(@Args('externalId', { type: () => String }) externalId: string) {
   // //   return this.eventsService.findByExternalId(externalId);
   // // }
-
-  // @CheckPoliciesApp(a => a.can('create', 'Closing'))
-  // @Mutation(() => Closing)
-  // async downloadEventData(
-  //   @Args('externalId', { type: () => String }) externalId: string,
-  //   @Args('phone', { type: () => String, nullable: true }) phone: string,
-  // ) {
-  //   return this.eventsService.createOne(externalId, phone);
-  // }
 
   // @CheckPoliciesApp(a => a.can('create', 'Closing'))
   // @Mutation(() => Event)

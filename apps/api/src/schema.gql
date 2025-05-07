@@ -18,6 +18,30 @@ input CreateAuthInput {
 }
 
 """"""
+input CreateEventInput {
+  """The banner of the event."""
+  banner: String
+
+  """The description of the event."""
+  description: String
+
+  """Whether the event is people sequence suggest limitable."""
+  isPeopleSequenceSuggestLimitable: Boolean = false
+
+  """The logo of the event."""
+  logo: String
+
+  """The name of the event."""
+  name: String!
+
+  """The number of people sequence suggest limit."""
+  numberOfPeopleSequenceSuggestLimit: Float = 0
+
+  """The slug of the event."""
+  slug: String!
+}
+
+""""""
 input CreateUserInput {
   """The email of the user"""
   email: String!
@@ -34,6 +58,33 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Event {
+  banner: String!
+  createdAt: DateTime!
+  description: String!
+  id: String!
+  isOpenedToReceiveSuggestions: Boolean!
+  isPeopleSequenceSuggestLimitable: Boolean!
+  logo: String!
+  name: String!
+  numberOfPeopleSequenceSuggestLimit: Float!
+  slug: String!
+  songs: [String!]!
+  updatedAt: DateTime!
+}
+
+""""""
+input FilterInput {
+  """Filter"""
+  filter: String! = ""
+
+  """Limit"""
+  limit: Float = 10
+
+  """Page"""
+  page: Float = 0
+}
+
 """"""
 input FilterUserInput {
   """Limit"""
@@ -49,6 +100,10 @@ input FilterUserInput {
 type Mutation {
   activateUser(id: String!): User!
   blockUser(id: String!): User!
+  createEvent(
+    """Create a new collective sale"""
+    input: CreateEventInput!
+  ): Event!
   createSession(data: CreateAuthInput!): AuthType!
   createUser(
     """Create a new user"""
@@ -60,7 +115,9 @@ type Mutation {
     input: ResetPasswordInput!
   ): Boolean!
   sendForgotPasswordEmail(email: String!): Boolean!
+  toggleEventIsOpenedToReceiveSuggestions(id: String!): Event!
   updateAvatar(avatar: String!): User!
+  updateEvent(input: UpdateEventInput!): Event!
   updateProfile(
     """Create a new user"""
     input: UpdateUserInput!
@@ -72,6 +129,15 @@ type Mutation {
 }
 
 type Query {
+  event(id: String!): Event!
+  events(
+    """Filtered a event"""
+    filter: FilterInput = {}
+  ): [Event!]!
+  getTotalEvents(
+    """Filtered a event"""
+    filter: FilterInput = {}
+  ): Float!
   getTotalUsers(
     """Filtered a new client"""
     filter: FilterUserInput = {}
@@ -96,6 +162,37 @@ type Session {
   id: String!
   updatedAt: DateTime!
   user: User!
+}
+
+type Subscription {
+  eventUpdated(slug: String!): Event!
+}
+
+""""""
+input UpdateEventInput {
+  """The banner of the event."""
+  banner: String
+
+  """The description of the event."""
+  description: String
+
+  """Id of the event to update."""
+  id: String!
+
+  """Whether the event is people sequence suggest limitable."""
+  isPeopleSequenceSuggestLimitable: Boolean = false
+
+  """The logo of the event."""
+  logo: String
+
+  """The name of the event."""
+  name: String!
+
+  """The number of people sequence suggest limit."""
+  numberOfPeopleSequenceSuggestLimit: Float = 0
+
+  """The slug of the event."""
+  slug: String!
 }
 
 """"""
