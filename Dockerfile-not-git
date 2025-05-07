@@ -28,12 +28,6 @@ COPY turbo.json turbo.json
 # RUN npx prisma generate --schema apps/api/prisma/schema.prisma
 RUN turbo run prisma:g
 
-COPY .env .env
-
-RUN env
-
-RUN turbo run prisma:mp
-
 RUN turbo run build --filter=@full-stack/api...
  
 FROM node:20-alpine AS runner
