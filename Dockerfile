@@ -8,6 +8,9 @@ RUN apk add --no-cache libc6-compat && \
 FROM base AS builder
 RUN apk add --no-cache openssl
 WORKDIR /usr/src/app
+
+COPY .git/ ./.git/
+
 COPY package.json pnpm-lock.yaml* ./
 COPY . .
 RUN turbo prune --scope=@full-stack/api --docker
@@ -21,6 +24,7 @@ COPY --from=builder /usr/src/app/out/json/ .
 COPY --from=builder /usr/src/app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /usr/src/app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 COPY --from=builder /usr/src/app/out/full/ .
+COPY --from=builder /usr/src/app/.git/ ./.git/
  
 RUN pnpm install --frozen-lockfile
 COPY turbo.json turbo.json
@@ -31,7 +35,7 @@ RUN turbo run build --filter=@full-stack/api...
 FROM node:20-alpine AS runner
 WORKDIR /usr/src/app
  
-RUN apk add --no-cache openssl && \
+RUN apk add --no-cache openssl git && \
     addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
  
@@ -42,6 +46,8 @@ COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/api/dist ./apps/ap
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/apps/api/prisma ./apps/api/prisma
 COPY --from=installer --chown=nodejs:nodejs /usr/src/app/packages ./packages
+# COPY --chown=nodejs:nodejs ./.git ./.git
+COPY --from=installer --chown=nodejs:nodejs /usr/src/app/.git/ ./apps/api/.git/
  
 USER nodejs
 WORKDIR /usr/src/app/apps/api
@@ -53,6 +59,6 @@ RUN env
 
 
 # CMD node dist/main.js
-CMD ["node", "dist/src/main.js"]
+# CMD ["node", "dist/src/main.js"]
 
-# CMD ["sh", "-c", "echo '--- Runtime Environment Variables ---' && env && echo '--- Starting Application ---' && node dist/src/main.js"]
+CMD ["sh", "-c", "echo '--- Runtime Environment Variables ---' && env && ls -la && echo '--- Starting Application ---' && node dist/src/main.js"]
