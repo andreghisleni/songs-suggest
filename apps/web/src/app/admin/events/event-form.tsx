@@ -166,7 +166,8 @@ export function EventForm({ event }: { event?: Event }) {
     }
   }, [isOpen, form]);
 
-  form.watch("name") &&
+  !event &&
+    form.watch("name") &&
     form.setValue("slug", removeCharacters(form.watch("name")));
 
   return (
