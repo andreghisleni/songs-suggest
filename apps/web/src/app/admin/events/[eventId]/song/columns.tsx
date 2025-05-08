@@ -9,9 +9,9 @@ import { SetRejectedButton } from "./set-rejected-button";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
-export type Sale = GetEventByIdWithSongsQuery["event"]["songs"][0];
+export type Song = GetEventByIdWithSongsQuery["event"]["songs"][0];
 
-export const columns: ColumnDef<Sale>[] = [
+export const columns: ColumnDef<Song>[] = [
   tdb("name", "Nome"),
   tdb("artist", "Artista"),
   tdb("suggestedByName", "Sugerido por"),

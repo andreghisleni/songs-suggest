@@ -42,7 +42,8 @@ export class SongsResolver {
     return this.pubSub.asyncIterableIterator('songUpdated');
   }
 
-  @CheckPoliciesApp(a => a.can('get-all', 'Song'))
+  // @CheckPoliciesApp(a => a.can('get-all', 'Song'))
+  @Public()
   @Subscription(() => Song, {
     resolve: (value: Song) => value,
     filter: (payload, variables) => {
