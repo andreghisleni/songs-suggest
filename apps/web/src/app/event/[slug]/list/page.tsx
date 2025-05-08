@@ -84,6 +84,12 @@ export default function EventPage({ params }) {
   });
 
   useEffect(() => {
+    if (!name || !id) {
+      router.push("../");
+    }
+  }, [name, id, router]);
+
+  useEffect(() => {
     if (eventUpdatedData?.eventUpdated) {
       const e = eventUpdatedData.eventUpdated;
       if (e.isOpenedToReceiveSuggestions === false) {
