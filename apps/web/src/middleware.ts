@@ -17,6 +17,7 @@ export default authMiddleware({
     "/sale/client/code/(.*)",
     "/s/(.*)",
     "/event/(.*)",
+    "/",
   ],
 
   // debug: true,

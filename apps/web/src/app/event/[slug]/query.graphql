@@ -80,3 +80,19 @@ mutation CreateSong($input: CreateSongInput!) {
     updatedAt
   }
 }
+
+subscription onEventUpdated($slug: String!) {
+  eventUpdated(slug: $slug) {
+    banner
+    createdAt
+    description
+    id
+    isOpenedToReceiveSuggestions
+    isPeopleSequenceSuggestLimitable
+    logo
+    name
+    numberOfPeopleSequenceSuggestLimit
+    slug
+    updatedAt
+  }
+}

@@ -542,6 +542,13 @@ export type CreateSongMutationVariables = Exact<{
 
 export type CreateSongMutation = { __typename?: 'Mutation', createSong: { __typename?: 'Song', id: string, artist: string, createdAt: Date, duration: number, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date } };
 
+export type OnEventUpdatedSubscriptionVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type OnEventUpdatedSubscription = { __typename?: 'Subscription', eventUpdated: { __typename?: 'Event', banner: string, createdAt: Date, description: string, id: string, isOpenedToReceiveSuggestions: boolean, isPeopleSequenceSuggestLimitable: boolean, logo: string, name: string, numberOfPeopleSequenceSuggestLimit: number, slug: string, updatedAt: Date } };
+
 export type GetMyProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -1402,6 +1409,46 @@ export function useCreateSongMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateSongMutationHookResult = ReturnType<typeof useCreateSongMutation>;
 export type CreateSongMutationResult = Apollo.MutationResult<CreateSongMutation>;
 export type CreateSongMutationOptions = Apollo.BaseMutationOptions<CreateSongMutation, CreateSongMutationVariables>;
+export const OnEventUpdatedDocument = gql`
+    subscription onEventUpdated($slug: String!) {
+  eventUpdated(slug: $slug) {
+    banner
+    createdAt
+    description
+    id
+    isOpenedToReceiveSuggestions
+    isPeopleSequenceSuggestLimitable
+    logo
+    name
+    numberOfPeopleSequenceSuggestLimit
+    slug
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useOnEventUpdatedSubscription__
+ *
+ * To run a query within a React component, call `useOnEventUpdatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnEventUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnEventUpdatedSubscription({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useOnEventUpdatedSubscription(baseOptions: Apollo.SubscriptionHookOptions<OnEventUpdatedSubscription, OnEventUpdatedSubscriptionVariables> & ({ variables: OnEventUpdatedSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<OnEventUpdatedSubscription, OnEventUpdatedSubscriptionVariables>(OnEventUpdatedDocument, options);
+      }
+export type OnEventUpdatedSubscriptionHookResult = ReturnType<typeof useOnEventUpdatedSubscription>;
+export type OnEventUpdatedSubscriptionResult = Apollo.SubscriptionResult<OnEventUpdatedSubscription>;
 export const GetMyProfileDocument = gql`
     query GetMyProfile {
   profile {

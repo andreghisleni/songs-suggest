@@ -76,7 +76,7 @@ export default async function AppLayout({
       variables: {
         slug,
       },
-      fetchPolicy: "cache-first",
+      fetchPolicy: "network-only",
     });
 
     const event = data?.eventBySlug;

@@ -5,12 +5,14 @@ import {
   GetEventBySlugWithSongsQuery,
   useCreateSongMutation,
   useGetEventBySlugWithSongsQuery,
+  useOnEventUpdatedSubscription,
   useOnSongUpdatedSubscription,
   useSearchSpotifySongsMutation,
 } from "@/generated/graphql";
 import { useToast } from "@/components/ui/use-toast";
 import { getCookie } from "cookies-next";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import SongSearch from "../../components/SongSearch";
 import SearchResults, { Track } from "../../components/SearchResults";
 import SuggestedSongsList from "../../components/SuggestedSongsList";
@@ -19,6 +21,7 @@ type Song = GetEventBySlugWithSongsQuery["eventBySlug"]["songs"][0];
 
 export default function EventPage({ params }) {
   const { toast } = useToast();
+  const router = useRouter();
 
   const name = getCookie("name");
   const id = getCookie("id");
@@ -63,6 +66,7 @@ export default function EventPage({ params }) {
     });
 
   const eventId = queryData?.eventBySlug?.id;
+  const event = queryData?.eventBySlug;
 
   const { data: updateData, loading: subscriptionLoading } =
     useOnSongUpdatedSubscription({
@@ -71,6 +75,28 @@ export default function EventPage({ params }) {
       },
       skip: !eventId, // Pula a subscrição se eventId não estiver disponível
     });
+
+  const { data: eventUpdatedData } = useOnEventUpdatedSubscription({
+    variables: {
+      slug: params.slug || "",
+    },
+    skip: !params.slug,
+  });
+
+  useEffect(() => {
+    if (eventUpdatedData?.eventUpdated) {
+      const e = eventUpdatedData.eventUpdated;
+      if (e.isOpenedToReceiveSuggestions === false) {
+        router.push(`./ended`);
+      }
+    }
+  }, [eventUpdatedData?.eventUpdated, params.slug, router]);
+
+  useEffect(() => {
+    if (event?.isOpenedToReceiveSuggestions === false) {
+      router.push(`./ended`);
+    }
+  }, [event?.isOpenedToReceiveSuggestions, params.slug, router]);
 
   // Estado local para armazenar e gerenciar a lista de músicas
   const [songsList, setSongsList] = useState<Song[]>([]);
@@ -86,18 +112,31 @@ export default function EventPage({ params }) {
     }
   }, [queryData, queryLoading]); // Dependências: executa quando queryData ou queryLoading mudam
 
-  // Efeito para aplicar atualizações de músicas recebidas via subscription
+  // Efeito para aplicar atualizações OU ADICIONAR músicas recebidas via subscription
   useEffect(() => {
     if (updateData?.songUpdated) {
-      const updatedSong = updateData.songUpdated as Song;
-      setSongsList((prevSongs) =>
-        // Mapeia a lista anterior, substituindo a música atualizada pela sua nova versão
-        prevSongs.map((song) =>
-          song.id === updatedSong.id ? updatedSong : song,
-        ),
-      );
+      const incomingSong = updateData.songUpdated as Song; // Música recebida via WS
+
+      setSongsList((prevSongs) => {
+        // Verifica se a música recebida já existe na lista local (comparando pelo ID)
+        const existingSongIndex = prevSongs.findIndex(
+          (song) => song.id === incomingSong.id,
+        );
+
+        if (existingSongIndex !== -1) {
+          // A música JÁ EXISTE na lista: vamos atualizá-la.
+          // Cria uma nova array para não modificar o estado anterior diretamente.
+          const newSongs = [...prevSongs];
+          // Substitui a música antiga no índice encontrado pela música atualizada.
+          newSongs[existingSongIndex] = incomingSong;
+          return newSongs; // Retorna a lista com a música atualizada.
+        }
+        // A música NÃO EXISTE na lista: vamos adicioná-la.
+        // Retorna uma nova lista contendo todas as músicas anteriores mais a nova.
+        return [...prevSongs, incomingSong];
+      });
     }
-  }, [updateData?.songUpdated]); // Dependência: executa quando uma música atualizada é recebida
+  }, [updateData?.songUpdated]); // Dependência: executa quando uma música é recebida/atualizada via subscription
 
   // Memoiza o processamento (filtragem e ordenação) da lista de músicas
   // Isso evita recálculos desnecessários a cada renderização se 'songsList' não mudou
@@ -126,9 +165,6 @@ export default function EventPage({ params }) {
 
     return filtered;
   }, [songsList]); // Recalcula apenas quando 'songsList' (o estado) muda
-
-  console.log("songsList", songsList);
-  console.log("processedSongs", processedSongs);
 
   const search = useSearchSpotifySongsMutation();
 

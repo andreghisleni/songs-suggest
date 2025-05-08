@@ -28,11 +28,62 @@ export class SongsService {
     });
 
     if (songExists) {
-      throw new GraphQLError('Song already exists', {
+      throw new GraphQLError(
+        'Música já foi colocada na lista, se não estiver aparecendo ela foi para a fila de reprodução ou rejeitada.',
+        {
+          extensions: {
+            code: 400,
+          },
+        },
+      );
+    }
+
+    const eventExists = await this.prisma.event.findUnique({
+      where: {
+        id: input.eventId,
+      },
+    });
+
+    if (!eventExists) {
+      throw new GraphQLError('Evento não encontrado', {
         extensions: {
           code: 400,
         },
       });
+    }
+    if (!eventExists.isOpenedToReceiveSuggestions) {
+      throw new GraphQLError('O evento não está aberto para receber sugestões', {
+        extensions: {
+          code: 400,
+        },
+      });
+    }
+
+    if (
+      eventExists.isPeopleSequenceSuggestLimitable &&
+      eventExists.numberOfPeopleSequenceSuggestLimit
+    ) {
+      const lastSongs = await this.prisma.song.findMany({
+        where: {
+          eventId: input.eventId,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: eventExists.numberOfPeopleSequenceSuggestLimit,
+      });
+
+      const lastSongsByUser = lastSongs.filter(song => song.suggestedById === input.suggestedById);
+      if (lastSongsByUser.length >= eventExists.numberOfPeopleSequenceSuggestLimit) {
+        throw new GraphQLError(
+          'Você atingiu o limite de músicas seguidas, aguarde que outras pessoas sugiram músicas',
+          {
+            extensions: {
+              code: 400,
+            },
+          },
+        );
+      }
     }
 
     const songCreated = await this.prisma.song.create({
