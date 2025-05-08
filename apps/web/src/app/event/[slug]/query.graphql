@@ -1,0 +1,82 @@
+query GetEventBySlug($slug: String!) {
+  eventBySlug(slug: $slug) {
+    id
+    slug
+    name
+    description
+    banner
+    logo
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+  }
+}
+
+query GetEventBySlugWithSongs($slug: String!) {
+  eventBySlug(slug: $slug) {
+    id
+    slug
+    name
+    description
+    banner
+    logo
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+    songs {
+      artist
+      createdAt
+      duration
+      id
+      image
+      isPlayed
+      isRejected
+      name
+      suggestedById
+      suggestedByName
+      updatedAt
+    }
+  }
+}
+
+mutation SearchSpotifySongs($query: String!) {
+  searchSpotify(query: $query) {
+    id
+    name
+    image
+    artist
+    duration_ms
+  }
+}
+
+subscription onSongUpdated($eventId: String!) {
+  songUpdated(eventId: $eventId) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+
+mutation CreateSong($input: CreateSongInput!) {
+  createSong(input: $input) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}

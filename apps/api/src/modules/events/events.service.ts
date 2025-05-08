@@ -179,4 +179,20 @@ export class EventsService {
 
     return eventUpdated;
   }
+
+  async songs(id: string) {
+    return this.prisma.event
+      .findUnique({
+        where: { id },
+      })
+      .songs({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        where: {
+          isPlayed: false,
+          isRejected: false,
+        },
+      });
+  }
 }

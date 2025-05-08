@@ -22,8 +22,8 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Event>[] => [
   tdb("name", "Nome"),
   tdb("description", "Descrição"),
   tdb("slug", "Slug"),
-  tdb("logo", "Logo"),
-  tdb("banner", "Banner"),
+  tdb("logo", "Logo", "image"),
+  tdb("banner", "Banner", "image"),
   tdb("isOpenedToReceiveSuggestions", "Aberto a Sugestões"),
   tdb("isPeopleSequenceSuggestLimitable", "Limite"),
   tdb("numberOfPeopleSequenceSuggestLimit", "Número limite"),
@@ -39,7 +39,7 @@ export const columns = ({ refetch }: ColumnsProps): ColumnDef<Event>[] => [
         <EventForm event={row.original} />
         <ToggleEventButton eventId={row.original.id} />
         <Button asChild>
-          <Link href={`events/${row.original.id}/sales`}>Abrir</Link>
+          <Link href={`events/${row.original.id}/song`}>Abrir</Link>
         </Button>
       </>
     ),

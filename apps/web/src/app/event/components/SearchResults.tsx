@@ -1,10 +1,7 @@
+import { SearchSpotifySongsMutation } from "@/generated/graphql";
+
 // components/SearchResults.tsx
-export interface Track {
-  id: string;
-  name: string;
-  artist: string;
-  albumArtUrl?: string;
-}
+export type Track = SearchSpotifySongsMutation["searchSpotify"][0];
 
 interface SearchResultsProps {
   results: Track[];
@@ -31,9 +28,9 @@ export default function SearchResults({
             className="flex items-center justify-between p-3 bg-spotify-gray hover:bg-gray-700 rounded-md transition-colors group"
           >
             <div className="flex items-center space-x-4 overflow-hidden">
-              {track.albumArtUrl && (
+              {track.image && (
                 <img
-                  src={track.albumArtUrl}
+                  src={track.image}
                   alt={`Capa de ${track.name}`}
                   className="w-12 h-12 rounded object-cover" // Spotify usa capas quadradas
                 />
@@ -50,6 +47,7 @@ export default function SearchResults({
             <button
               onClick={() => onSuggest(track)}
               className="ml-4 px-4 py-2 bg-spotify-green hover:bg-green-500 text-white text-sm font-semibold rounded-full transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400"
+              type="button"
             >
               Sugerir
             </button>

@@ -42,6 +42,33 @@ input CreateEventInput {
 }
 
 """"""
+input CreateSongInput {
+  """The artist of the song."""
+  artist: String!
+
+  """The duration of the song in seconds."""
+  duration: Float!
+
+  """The ID of the event associated with the song."""
+  eventId: String!
+
+  """The image URL of the song."""
+  image: String
+
+  """The name of the song."""
+  name: String!
+
+  """The Spotify ID of the song."""
+  spotifyId: String!
+
+  """The ID of the user who suggested the song."""
+  suggestedById: String!
+
+  """The name of the user who suggested the song."""
+  suggestedByName: String!
+}
+
+""""""
 input CreateUserInput {
   """The email of the user"""
   email: String!
@@ -69,7 +96,7 @@ type Event {
   name: String!
   numberOfPeopleSequenceSuggestLimit: Float!
   slug: String!
-  songs: [String!]!
+  songs: [Song!]!
   updatedAt: DateTime!
 }
 
@@ -105,6 +132,10 @@ type Mutation {
     input: CreateEventInput!
   ): Event!
   createSession(data: CreateAuthInput!): AuthType!
+  createSong(
+    """Create a new collective sale"""
+    input: CreateSongInput!
+  ): Song!
   createUser(
     """Create a new user"""
     input: CreateUserInput!
@@ -114,7 +145,10 @@ type Mutation {
     """Reset user password"""
     input: ResetPasswordInput!
   ): Boolean!
+  searchSpotify(query: String!): [SpotifySong!]!
   sendForgotPasswordEmail(email: String!): Boolean!
+  setPlayedSong(id: String!): Song!
+  setRejectedSong(id: String!): Song!
   toggleEventIsOpenedToReceiveSuggestions(id: String!): Event!
   updateAvatar(avatar: String!): User!
   updateEvent(input: UpdateEventInput!): Event!
@@ -130,6 +164,7 @@ type Mutation {
 
 type Query {
   event(id: String!): Event!
+  eventBySlug(slug: String!): Event!
   events(
     """Filtered a event"""
     filter: FilterInput = {}
@@ -138,12 +173,21 @@ type Query {
     """Filtered a event"""
     filter: FilterInput = {}
   ): Float!
+  getTotalSongs(
+    """Filtered a song"""
+    filter: FilterInput = {}
+  ): Float!
   getTotalUsers(
     """Filtered a new client"""
     filter: FilterUserInput = {}
   ): Float!
   profile: User!
   session: Session!
+  song(id: String!): Song!
+  songs(
+    """Filtered a song"""
+    filter: FilterInput = {}
+  ): [Song!]!
   user(id: String!): User!
   users(
     """Filtered a new client"""
@@ -164,8 +208,33 @@ type Session {
   user: User!
 }
 
+type Song {
+  artist: String!
+  createdAt: DateTime!
+  duration: Float!
+  event: Event!
+  id: String!
+  image: String
+  isPlayed: Boolean!
+  isRejected: Boolean!
+  name: String!
+  suggestedById: String!
+  suggestedByName: String!
+  updatedAt: DateTime!
+}
+
+type SpotifySong {
+  artist: String!
+  duration_ms: Float!
+  id: String!
+  image: String!
+  name: String!
+}
+
 type Subscription {
   eventUpdated(slug: String!): Event!
+  songAdded(eventId: String!): Song!
+  songUpdated(eventId: String!): Song!
 }
 
 """"""

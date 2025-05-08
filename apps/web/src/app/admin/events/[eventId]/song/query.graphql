@@ -1,0 +1,75 @@
+
+query GetEventByIdWithSongs($id: String!) {
+  event(id: $id) {
+    id
+    slug
+    name
+    description
+    banner
+    logo
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+    songs {
+      artist
+      createdAt
+      duration
+      id
+      image
+      isPlayed
+      isRejected
+      name
+      suggestedById
+      suggestedByName
+      updatedAt
+    }
+  }
+}
+
+subscription onSongAdded($eventId: String!) {
+  songAdded(eventId: $eventId) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+
+mutation setPlayedSong($id: String!) {
+  setPlayedSong(id: $id) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+
+mutation setRejectedSong($id: String!) {
+  setRejectedSong(id: $id) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}

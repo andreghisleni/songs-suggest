@@ -1,12 +1,16 @@
 // components/SuggestedSongsList.tsx
+import { GetEventBySlugWithSongsQuery } from "@/generated/graphql";
 import { Music, UserCircle, Clock } from "lucide-react"; // Ícones opcionais
-import { SuggestedTrack } from "../[slug]/page";
 
 interface SuggestedSongsListProps {
-  songs: SuggestedTrack[];
+  songs: GetEventBySlugWithSongsQuery["eventBySlug"]["songs"];
+  id: string;
 }
 
-export default function SuggestedSongsList({ songs }: SuggestedSongsListProps) {
+export default function SuggestedSongsList({
+  songs,
+  id,
+}: SuggestedSongsListProps) {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6 text-white border-b border-spotify-gray pb-3">
@@ -16,7 +20,8 @@ export default function SuggestedSongsList({ songs }: SuggestedSongsListProps) {
         <div className="flex flex-col items-center justify-center py-10 text-center bg-spotify-gray rounded-lg">
           <Music size={48} className="text-spotify-light-gray mb-4" />
           <p className="text-spotify-light-gray text-lg">
-            Ainda não há músicas na playlist.
+            Ainda não há músicas na playlist ou todas as músicas sugeridas já
+            estão na fila para tocar.
           </p>
           <p className="text-gray-500">
             Use a busca acima para sugerir as primeiras!
@@ -32,9 +37,9 @@ export default function SuggestedSongsList({ songs }: SuggestedSongsListProps) {
               <span className="text-sm text-gray-400 w-6 text-right mr-3">
                 {index + 1}.
               </span>
-              {song.albumArtUrl && (
+              {song.image && (
                 <img
-                  src={song.albumArtUrl}
+                  src={song.image}
                   alt={`Capa de ${song.name}`}
                   className="w-14 h-14 rounded object-cover mr-4 shadow-md"
                 />
@@ -46,13 +51,17 @@ export default function SuggestedSongsList({ songs }: SuggestedSongsListProps) {
                 <p className="text-sm text-spotify-light-gray truncate">
                   {song.artist}
                 </p>
-                {song.suggestedBy && (
+                {song.suggestedByName && (
                   <div className="flex items-center text-xs text-gray-500 mt-1">
                     <UserCircle size={14} className="mr-1" />
-                    <span>{song.suggestedBy}</span>
+                    <span>
+                      {song.suggestedById === id
+                        ? "Você"
+                        : song.suggestedByName}
+                    </span>
                     <Clock size={14} className="ml-2 mr-1" />
                     <span>
-                      {song.timestamp.toLocaleTimeString([], {
+                      {new Date(song.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}

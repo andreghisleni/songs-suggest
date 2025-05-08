@@ -171,9 +171,10 @@ exports.Prisma.EventScalarFieldEnum = {
 
 exports.Prisma.SongScalarFieldEnum = {
   id: 'id',
+  spotifyId: 'spotifyId',
   name: 'name',
   artist: 'artist',
-  album: 'album',
+  image: 'image',
   duration: 'duration',
   eventId: 'eventId',
   suggestedById: 'suggestedById',

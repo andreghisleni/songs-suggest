@@ -1,3 +1,4 @@
+import { Song } from '@/modules/songs/entities/song.entity';
 import { ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
@@ -16,7 +17,7 @@ export class Event {
   isPeopleSequenceSuggestLimitable: boolean;
   numberOfPeopleSequenceSuggestLimit: number;
 
-  songs: string[]; // TODO: Change to a proper type
+  songs: Song[];
 
   createdAt: Date;
   updatedAt: Date;

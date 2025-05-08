@@ -2,7 +2,15 @@ import { FilterInput, FilterSchema } from '@/filter-input';
 import { Public } from '@/shared/auth/public.decorator';
 import { CheckPoliciesApp } from '@/shared/casl/policies.types';
 import { PubSubService } from '@/shared/subscription/pubSub.service';
-import { Args, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+  Subscription,
+} from '@nestjs/graphql';
 import { ZodArgs } from 'nestjs-graphql-zod';
 
 import { CreateEventInput, CreateEventSchema } from './dto/create-event.input';
@@ -97,34 +105,14 @@ export class EventsResolver {
     return this.eventsService.findById(id);
   }
 
-  // @Public()
-  // @Query(() => Event, { name: 'eventByShortId' })
-  // findByShortId(@Args('shortId', { type: () => String }) shortId: string) {
-  //   return this.eventsService.findByShortId(shortId);
-  // }
+  @Public()
+  @Query(() => Event, { name: 'eventBySlug' })
+  findBySlug(@Args('slug', { type: () => String }) slug: string) {
+    return this.eventsService.findBySlug(slug);
+  }
 
-  // // @Public()
-  // // @Query(() => ExternalEvent, { name: 'eventByExternalId' })
-  // // findByExternalId(@Args('externalId', { type: () => String }) externalId: string) {
-  // //   return this.eventsService.findByExternalId(externalId);
-  // // }
-
-  // @CheckPoliciesApp(a => a.can('create', 'Closing'))
-  // @Mutation(() => Event)
-  // async reprocess(
-  //   @Args('id', { type: () => String }) id: string,
-  //   @Args('phone', { type: () => String, nullable: true }) phone: string,
-  // ) {
-  //   return this.eventsService.reprocess(id, phone);
-  // }
-
-  // @ResolveField()
-  // closing(@Parent() { id }: Event) {
-  //   return this.eventsService.closing(id);
-  // }
-
-  // @ResolveField()
-  // payments(@Parent() { id }: Event) {
-  //   return this.eventsService.payments(id);
-  // }
+  @ResolveField()
+  songs(@Parent() { id }: Event) {
+    return this.eventsService.songs(id);
+  }
 }

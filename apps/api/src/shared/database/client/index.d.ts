@@ -6334,9 +6334,10 @@ export namespace Prisma {
 
   export type SongMinAggregateOutputType = {
     id: string | null
+    spotifyId: string | null
     name: string | null
     artist: string | null
-    album: string | null
+    image: string | null
     duration: number | null
     eventId: string | null
     suggestedById: string | null
@@ -6349,9 +6350,10 @@ export namespace Prisma {
 
   export type SongMaxAggregateOutputType = {
     id: string | null
+    spotifyId: string | null
     name: string | null
     artist: string | null
-    album: string | null
+    image: string | null
     duration: number | null
     eventId: string | null
     suggestedById: string | null
@@ -6364,9 +6366,10 @@ export namespace Prisma {
 
   export type SongCountAggregateOutputType = {
     id: number
+    spotifyId: number
     name: number
     artist: number
-    album: number
+    image: number
     duration: number
     eventId: number
     suggestedById: number
@@ -6389,9 +6392,10 @@ export namespace Prisma {
 
   export type SongMinAggregateInputType = {
     id?: true
+    spotifyId?: true
     name?: true
     artist?: true
-    album?: true
+    image?: true
     duration?: true
     eventId?: true
     suggestedById?: true
@@ -6404,9 +6408,10 @@ export namespace Prisma {
 
   export type SongMaxAggregateInputType = {
     id?: true
+    spotifyId?: true
     name?: true
     artist?: true
-    album?: true
+    image?: true
     duration?: true
     eventId?: true
     suggestedById?: true
@@ -6419,9 +6424,10 @@ export namespace Prisma {
 
   export type SongCountAggregateInputType = {
     id?: true
+    spotifyId?: true
     name?: true
     artist?: true
-    album?: true
+    image?: true
     duration?: true
     eventId?: true
     suggestedById?: true
@@ -6521,9 +6527,10 @@ export namespace Prisma {
 
   export type SongGroupByOutputType = {
     id: string
+    spotifyId: string
     name: string
     artist: string
-    album: string | null
+    image: string | null
     duration: number
     eventId: string
     suggestedById: string
@@ -6555,9 +6562,10 @@ export namespace Prisma {
 
   export type SongSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    spotifyId?: boolean
     name?: boolean
     artist?: boolean
-    album?: boolean
+    image?: boolean
     duration?: boolean
     eventId?: boolean
     suggestedById?: boolean
@@ -6571,9 +6579,10 @@ export namespace Prisma {
 
   export type SongSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    spotifyId?: boolean
     name?: boolean
     artist?: boolean
-    album?: boolean
+    image?: boolean
     duration?: boolean
     eventId?: boolean
     suggestedById?: boolean
@@ -6587,9 +6596,10 @@ export namespace Prisma {
 
   export type SongSelectScalar = {
     id?: boolean
+    spotifyId?: boolean
     name?: boolean
     artist?: boolean
-    album?: boolean
+    image?: boolean
     duration?: boolean
     eventId?: boolean
     suggestedById?: boolean
@@ -6614,9 +6624,10 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      spotifyId: string
       name: string
       artist: string
-      album: string | null
+      image: string | null
       duration: number
       eventId: string
       suggestedById: string
@@ -7020,9 +7031,10 @@ export namespace Prisma {
    */ 
   interface SongFieldRefs {
     readonly id: FieldRef<"Song", 'String'>
+    readonly spotifyId: FieldRef<"Song", 'String'>
     readonly name: FieldRef<"Song", 'String'>
     readonly artist: FieldRef<"Song", 'String'>
-    readonly album: FieldRef<"Song", 'String'>
+    readonly image: FieldRef<"Song", 'String'>
     readonly duration: FieldRef<"Song", 'Int'>
     readonly eventId: FieldRef<"Song", 'String'>
     readonly suggestedById: FieldRef<"Song", 'String'>
@@ -7444,9 +7456,10 @@ export namespace Prisma {
 
   export const SongScalarFieldEnum: {
     id: 'id',
+    spotifyId: 'spotifyId',
     name: 'name',
     artist: 'artist',
-    album: 'album',
+    image: 'image',
     duration: 'duration',
     eventId: 'eventId',
     suggestedById: 'suggestedById',
@@ -7921,9 +7934,10 @@ export namespace Prisma {
     OR?: SongWhereInput[]
     NOT?: SongWhereInput | SongWhereInput[]
     id?: StringFilter<"Song"> | string
+    spotifyId?: StringFilter<"Song"> | string
     name?: StringFilter<"Song"> | string
     artist?: StringFilter<"Song"> | string
-    album?: StringNullableFilter<"Song"> | string | null
+    image?: StringNullableFilter<"Song"> | string | null
     duration?: IntFilter<"Song"> | number
     eventId?: StringFilter<"Song"> | string
     suggestedById?: StringFilter<"Song"> | string
@@ -7937,9 +7951,10 @@ export namespace Prisma {
 
   export type SongOrderByWithRelationInput = {
     id?: SortOrder
+    spotifyId?: SortOrder
     name?: SortOrder
     artist?: SortOrder
-    album?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
     duration?: SortOrder
     eventId?: SortOrder
     suggestedById?: SortOrder
@@ -7956,9 +7971,10 @@ export namespace Prisma {
     AND?: SongWhereInput | SongWhereInput[]
     OR?: SongWhereInput[]
     NOT?: SongWhereInput | SongWhereInput[]
+    spotifyId?: StringFilter<"Song"> | string
     name?: StringFilter<"Song"> | string
     artist?: StringFilter<"Song"> | string
-    album?: StringNullableFilter<"Song"> | string | null
+    image?: StringNullableFilter<"Song"> | string | null
     duration?: IntFilter<"Song"> | number
     eventId?: StringFilter<"Song"> | string
     suggestedById?: StringFilter<"Song"> | string
@@ -7972,9 +7988,10 @@ export namespace Prisma {
 
   export type SongOrderByWithAggregationInput = {
     id?: SortOrder
+    spotifyId?: SortOrder
     name?: SortOrder
     artist?: SortOrder
-    album?: SortOrderInput | SortOrder
+    image?: SortOrderInput | SortOrder
     duration?: SortOrder
     eventId?: SortOrder
     suggestedById?: SortOrder
@@ -7995,9 +8012,10 @@ export namespace Prisma {
     OR?: SongScalarWhereWithAggregatesInput[]
     NOT?: SongScalarWhereWithAggregatesInput | SongScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Song"> | string
+    spotifyId?: StringWithAggregatesFilter<"Song"> | string
     name?: StringWithAggregatesFilter<"Song"> | string
     artist?: StringWithAggregatesFilter<"Song"> | string
-    album?: StringNullableWithAggregatesFilter<"Song"> | string | null
+    image?: StringNullableWithAggregatesFilter<"Song"> | string | null
     duration?: IntWithAggregatesFilter<"Song"> | number
     eventId?: StringWithAggregatesFilter<"Song"> | string
     suggestedById?: StringWithAggregatesFilter<"Song"> | string
@@ -8373,9 +8391,10 @@ export namespace Prisma {
 
   export type SongCreateInput = {
     id?: string
+    spotifyId: string
     name: string
     artist: string
-    album?: string | null
+    image?: string | null
     duration: number
     suggestedById: string
     suggestedByName: string
@@ -8388,9 +8407,10 @@ export namespace Prisma {
 
   export type SongUncheckedCreateInput = {
     id?: string
+    spotifyId: string
     name: string
     artist: string
-    album?: string | null
+    image?: string | null
     duration: number
     eventId: string
     suggestedById: string
@@ -8403,9 +8423,10 @@ export namespace Prisma {
 
   export type SongUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     suggestedById?: StringFieldUpdateOperationsInput | string
     suggestedByName?: StringFieldUpdateOperationsInput | string
@@ -8418,9 +8439,10 @@ export namespace Prisma {
 
   export type SongUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     eventId?: StringFieldUpdateOperationsInput | string
     suggestedById?: StringFieldUpdateOperationsInput | string
@@ -8433,9 +8455,10 @@ export namespace Prisma {
 
   export type SongCreateManyInput = {
     id?: string
+    spotifyId: string
     name: string
     artist: string
-    album?: string | null
+    image?: string | null
     duration: number
     eventId: string
     suggestedById: string
@@ -8448,9 +8471,10 @@ export namespace Prisma {
 
   export type SongUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     suggestedById?: StringFieldUpdateOperationsInput | string
     suggestedByName?: StringFieldUpdateOperationsInput | string
@@ -8462,9 +8486,10 @@ export namespace Prisma {
 
   export type SongUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     eventId?: StringFieldUpdateOperationsInput | string
     suggestedById?: StringFieldUpdateOperationsInput | string
@@ -8891,9 +8916,10 @@ export namespace Prisma {
 
   export type SongCountOrderByAggregateInput = {
     id?: SortOrder
+    spotifyId?: SortOrder
     name?: SortOrder
     artist?: SortOrder
-    album?: SortOrder
+    image?: SortOrder
     duration?: SortOrder
     eventId?: SortOrder
     suggestedById?: SortOrder
@@ -8910,9 +8936,10 @@ export namespace Prisma {
 
   export type SongMaxOrderByAggregateInput = {
     id?: SortOrder
+    spotifyId?: SortOrder
     name?: SortOrder
     artist?: SortOrder
-    album?: SortOrder
+    image?: SortOrder
     duration?: SortOrder
     eventId?: SortOrder
     suggestedById?: SortOrder
@@ -8925,9 +8952,10 @@ export namespace Prisma {
 
   export type SongMinOrderByAggregateInput = {
     id?: SortOrder
+    spotifyId?: SortOrder
     name?: SortOrder
     artist?: SortOrder
-    album?: SortOrder
+    image?: SortOrder
     duration?: SortOrder
     eventId?: SortOrder
     suggestedById?: SortOrder
@@ -9850,9 +9878,10 @@ export namespace Prisma {
 
   export type SongCreateWithoutEventInput = {
     id?: string
+    spotifyId: string
     name: string
     artist: string
-    album?: string | null
+    image?: string | null
     duration: number
     suggestedById: string
     suggestedByName: string
@@ -9864,9 +9893,10 @@ export namespace Prisma {
 
   export type SongUncheckedCreateWithoutEventInput = {
     id?: string
+    spotifyId: string
     name: string
     artist: string
-    album?: string | null
+    image?: string | null
     duration: number
     suggestedById: string
     suggestedByName: string
@@ -9907,9 +9937,10 @@ export namespace Prisma {
     OR?: SongScalarWhereInput[]
     NOT?: SongScalarWhereInput | SongScalarWhereInput[]
     id?: StringFilter<"Song"> | string
+    spotifyId?: StringFilter<"Song"> | string
     name?: StringFilter<"Song"> | string
     artist?: StringFilter<"Song"> | string
-    album?: StringNullableFilter<"Song"> | string | null
+    image?: StringNullableFilter<"Song"> | string | null
     duration?: IntFilter<"Song"> | number
     eventId?: StringFilter<"Song"> | string
     suggestedById?: StringFilter<"Song"> | string
@@ -10070,9 +10101,10 @@ export namespace Prisma {
 
   export type SongCreateManyEventInput = {
     id?: string
+    spotifyId: string
     name: string
     artist: string
-    album?: string | null
+    image?: string | null
     duration: number
     suggestedById: string
     suggestedByName: string
@@ -10084,9 +10116,10 @@ export namespace Prisma {
 
   export type SongUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     suggestedById?: StringFieldUpdateOperationsInput | string
     suggestedByName?: StringFieldUpdateOperationsInput | string
@@ -10098,9 +10131,10 @@ export namespace Prisma {
 
   export type SongUncheckedUpdateWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     suggestedById?: StringFieldUpdateOperationsInput | string
     suggestedByName?: StringFieldUpdateOperationsInput | string
@@ -10112,9 +10146,10 @@ export namespace Prisma {
 
   export type SongUncheckedUpdateManyWithoutEventInput = {
     id?: StringFieldUpdateOperationsInput | string
+    spotifyId?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     artist?: StringFieldUpdateOperationsInput | string
-    album?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     duration?: IntFieldUpdateOperationsInput | number
     suggestedById?: StringFieldUpdateOperationsInput | string
     suggestedByName?: StringFieldUpdateOperationsInput | string

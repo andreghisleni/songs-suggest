@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -216,6 +217,7 @@ export function EventForm({ event }: { event?: Event }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Logo</FormLabel>
+                  <FormDescription>150x150</FormDescription>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -230,6 +232,7 @@ export function EventForm({ event }: { event?: Event }) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Banner</FormLabel>
+                  <FormDescription>1200x300</FormDescription>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

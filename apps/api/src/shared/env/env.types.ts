@@ -30,6 +30,9 @@ export const envSchema = z.object({
   REDIS_PORT: z.coerce.number(),
   REDIS_USERNAME: z.string(),
   REDIS_PASSWORD: z.string().default(''),
+
+  SPOTIFY_CLIENT_ID: z.string(),
+  SPOTIFY_CLIENT_SECRET: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

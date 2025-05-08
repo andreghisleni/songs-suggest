@@ -6,6 +6,7 @@ import { permissions } from './permissions';
 import { closingSubject } from './subjects/closing';
 import { eventSubject } from './subjects/event';
 import { sessionSubject } from './subjects/session';
+import { songSubject } from './subjects/song';
 import { userSubject } from './subjects/user';
 
 export * from './models/user';
@@ -16,6 +17,7 @@ const appAbilitiesSchema = z.union([
   sessionSubject,
   closingSubject,
   eventSubject,
+  songSubject,
   z.tuple([z.literal('manage'), z.literal('all')]),
 ]);
 

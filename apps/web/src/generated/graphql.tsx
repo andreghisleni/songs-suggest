@@ -50,6 +50,25 @@ export type CreateEventInput = {
   slug: Scalars['String']['input'];
 };
 
+export type CreateSongInput = {
+  /** The artist of the song. */
+  artist: Scalars['String']['input'];
+  /** The duration of the song in seconds. */
+  duration: Scalars['Float']['input'];
+  /** The ID of the event associated with the song. */
+  eventId: Scalars['String']['input'];
+  /** The image URL of the song. */
+  image?: InputMaybe<Scalars['String']['input']>;
+  /** The name of the song. */
+  name: Scalars['String']['input'];
+  /** The Spotify ID of the song. */
+  spotifyId: Scalars['String']['input'];
+  /** The ID of the user who suggested the song. */
+  suggestedById: Scalars['String']['input'];
+  /** The name of the user who suggested the song. */
+  suggestedByName: Scalars['String']['input'];
+};
+
 export type CreateUserInput = {
   /** The email of the user */
   email: Scalars['String']['input'];
@@ -71,7 +90,7 @@ export type Event = {
   name: Scalars['String']['output'];
   numberOfPeopleSequenceSuggestLimit: Scalars['Float']['output'];
   slug: Scalars['String']['output'];
-  songs: Array<Scalars['String']['output']>;
+  songs: Array<Song>;
   updatedAt: Scalars['DateTime']['output'];
 };
 
@@ -99,10 +118,14 @@ export type Mutation = {
   blockUser: User;
   createEvent: Event;
   createSession: AuthType;
+  createSong: Song;
   createUser: User;
   refreshSession: AuthType;
   resetPassword: Scalars['Boolean']['output'];
+  searchSpotify: Array<SpotifySong>;
   sendForgotPasswordEmail: Scalars['Boolean']['output'];
+  setPlayedSong: Song;
+  setRejectedSong: Song;
   toggleEventIsOpenedToReceiveSuggestions: Event;
   updateAvatar: User;
   updateEvent: Event;
@@ -131,6 +154,11 @@ export type MutationCreateSessionArgs = {
 };
 
 
+export type MutationCreateSongArgs = {
+  input: CreateSongInput;
+};
+
+
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
@@ -146,8 +174,23 @@ export type MutationResetPasswordArgs = {
 };
 
 
+export type MutationSearchSpotifyArgs = {
+  query: Scalars['String']['input'];
+};
+
+
 export type MutationSendForgotPasswordEmailArgs = {
   email: Scalars['String']['input'];
+};
+
+
+export type MutationSetPlayedSongArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type MutationSetRejectedSongArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -178,11 +221,15 @@ export type MutationUpdateRoleArgs = {
 export type Query = {
   __typename?: 'Query';
   event: Event;
+  eventBySlug: Event;
   events: Array<Event>;
   getTotalEvents: Scalars['Float']['output'];
+  getTotalSongs: Scalars['Float']['output'];
   getTotalUsers: Scalars['Float']['output'];
   profile: User;
   session: Session;
+  song: Song;
+  songs: Array<Song>;
   user: User;
   users: Array<User>;
 };
@@ -190,6 +237,11 @@ export type Query = {
 
 export type QueryEventArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryEventBySlugArgs = {
+  slug: Scalars['String']['input'];
 };
 
 
@@ -203,8 +255,23 @@ export type QueryGetTotalEventsArgs = {
 };
 
 
+export type QueryGetTotalSongsArgs = {
+  filter?: InputMaybe<FilterInput>;
+};
+
+
 export type QueryGetTotalUsersArgs = {
   filter?: InputMaybe<FilterUserInput>;
+};
+
+
+export type QuerySongArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type QuerySongsArgs = {
+  filter?: InputMaybe<FilterInput>;
 };
 
 
@@ -230,14 +297,51 @@ export type Session = {
   user: User;
 };
 
+export type Song = {
+  __typename?: 'Song';
+  artist: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  duration: Scalars['Float']['output'];
+  event: Event;
+  id: Scalars['String']['output'];
+  image?: Maybe<Scalars['String']['output']>;
+  isPlayed: Scalars['Boolean']['output'];
+  isRejected: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  suggestedById: Scalars['String']['output'];
+  suggestedByName: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+};
+
+export type SpotifySong = {
+  __typename?: 'SpotifySong';
+  artist: Scalars['String']['output'];
+  duration_ms: Scalars['Float']['output'];
+  id: Scalars['String']['output'];
+  image: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   eventUpdated: Event;
+  songAdded: Song;
+  songUpdated: Song;
 };
 
 
 export type SubscriptionEventUpdatedArgs = {
   slug: Scalars['String']['input'];
+};
+
+
+export type SubscriptionSongAddedArgs = {
+  eventId: Scalars['String']['input'];
+};
+
+
+export type SubscriptionSongUpdatedArgs = {
+  eventId: Scalars['String']['input'];
 };
 
 export type UpdateEventInput = {
@@ -312,6 +416,34 @@ export type ResetPasswordMutationVariables = Exact<{
 
 export type ResetPasswordMutation = { __typename?: 'Mutation', resetPassword: boolean };
 
+export type GetEventByIdWithSongsQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type GetEventByIdWithSongsQuery = { __typename?: 'Query', event: { __typename?: 'Event', id: string, slug: string, name: string, description: string, banner: string, logo: string, isOpenedToReceiveSuggestions: boolean, createdAt: Date, updatedAt: Date, songs: Array<{ __typename?: 'Song', artist: string, createdAt: Date, duration: number, id: string, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date }> } };
+
+export type OnSongAddedSubscriptionVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type OnSongAddedSubscription = { __typename?: 'Subscription', songAdded: { __typename?: 'Song', id: string, artist: string, createdAt: Date, duration: number, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date } };
+
+export type SetPlayedSongMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type SetPlayedSongMutation = { __typename?: 'Mutation', setPlayedSong: { __typename?: 'Song', id: string, artist: string, createdAt: Date, duration: number, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date } };
+
+export type SetRejectedSongMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type SetRejectedSongMutation = { __typename?: 'Mutation', setRejectedSong: { __typename?: 'Song', id: string, artist: string, createdAt: Date, duration: number, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date } };
+
 export type GetAllEventsQueryVariables = Exact<{
   filter?: InputMaybe<FilterInput>;
 }>;
@@ -374,6 +506,41 @@ export type UpdateRoleMutationVariables = Exact<{
 
 
 export type UpdateRoleMutation = { __typename?: 'Mutation', updateRole: { __typename?: 'User', id: string, role: string } };
+
+export type GetEventBySlugQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetEventBySlugQuery = { __typename?: 'Query', eventBySlug: { __typename?: 'Event', id: string, slug: string, name: string, description: string, banner: string, logo: string, isOpenedToReceiveSuggestions: boolean, createdAt: Date, updatedAt: Date } };
+
+export type GetEventBySlugWithSongsQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetEventBySlugWithSongsQuery = { __typename?: 'Query', eventBySlug: { __typename?: 'Event', id: string, slug: string, name: string, description: string, banner: string, logo: string, isOpenedToReceiveSuggestions: boolean, createdAt: Date, updatedAt: Date, songs: Array<{ __typename?: 'Song', artist: string, createdAt: Date, duration: number, id: string, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date }> } };
+
+export type SearchSpotifySongsMutationVariables = Exact<{
+  query: Scalars['String']['input'];
+}>;
+
+
+export type SearchSpotifySongsMutation = { __typename?: 'Mutation', searchSpotify: Array<{ __typename?: 'SpotifySong', id: string, name: string, image: string, artist: string, duration_ms: number }> };
+
+export type OnSongUpdatedSubscriptionVariables = Exact<{
+  eventId: Scalars['String']['input'];
+}>;
+
+
+export type OnSongUpdatedSubscription = { __typename?: 'Subscription', songUpdated: { __typename?: 'Song', id: string, artist: string, createdAt: Date, duration: number, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date } };
+
+export type CreateSongMutationVariables = Exact<{
+  input: CreateSongInput;
+}>;
+
+
+export type CreateSongMutation = { __typename?: 'Mutation', createSong: { __typename?: 'Song', id: string, artist: string, createdAt: Date, duration: number, image?: string | null, isPlayed: boolean, isRejected: boolean, name: string, suggestedById: string, suggestedByName: string, updatedAt: Date } };
 
 export type GetMyProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -478,6 +645,193 @@ export function useResetPasswordMutation(baseOptions?: Apollo.MutationHookOption
 export type ResetPasswordMutationHookResult = ReturnType<typeof useResetPasswordMutation>;
 export type ResetPasswordMutationResult = Apollo.MutationResult<ResetPasswordMutation>;
 export type ResetPasswordMutationOptions = Apollo.BaseMutationOptions<ResetPasswordMutation, ResetPasswordMutationVariables>;
+export const GetEventByIdWithSongsDocument = gql`
+    query GetEventByIdWithSongs($id: String!) {
+  event(id: $id) {
+    id
+    slug
+    name
+    description
+    banner
+    logo
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+    songs {
+      artist
+      createdAt
+      duration
+      id
+      image
+      isPlayed
+      isRejected
+      name
+      suggestedById
+      suggestedByName
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetEventByIdWithSongsQuery__
+ *
+ * To run a query within a React component, call `useGetEventByIdWithSongsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventByIdWithSongsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventByIdWithSongsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetEventByIdWithSongsQuery(baseOptions: Apollo.QueryHookOptions<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables> & ({ variables: GetEventByIdWithSongsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables>(GetEventByIdWithSongsDocument, options);
+      }
+export function useGetEventByIdWithSongsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables>(GetEventByIdWithSongsDocument, options);
+        }
+export function useGetEventByIdWithSongsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables>(GetEventByIdWithSongsDocument, options);
+        }
+export type GetEventByIdWithSongsQueryHookResult = ReturnType<typeof useGetEventByIdWithSongsQuery>;
+export type GetEventByIdWithSongsLazyQueryHookResult = ReturnType<typeof useGetEventByIdWithSongsLazyQuery>;
+export type GetEventByIdWithSongsSuspenseQueryHookResult = ReturnType<typeof useGetEventByIdWithSongsSuspenseQuery>;
+export type GetEventByIdWithSongsQueryResult = Apollo.QueryResult<GetEventByIdWithSongsQuery, GetEventByIdWithSongsQueryVariables>;
+export const OnSongAddedDocument = gql`
+    subscription onSongAdded($eventId: String!) {
+  songAdded(eventId: $eventId) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useOnSongAddedSubscription__
+ *
+ * To run a query within a React component, call `useOnSongAddedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnSongAddedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnSongAddedSubscription({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useOnSongAddedSubscription(baseOptions: Apollo.SubscriptionHookOptions<OnSongAddedSubscription, OnSongAddedSubscriptionVariables> & ({ variables: OnSongAddedSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<OnSongAddedSubscription, OnSongAddedSubscriptionVariables>(OnSongAddedDocument, options);
+      }
+export type OnSongAddedSubscriptionHookResult = ReturnType<typeof useOnSongAddedSubscription>;
+export type OnSongAddedSubscriptionResult = Apollo.SubscriptionResult<OnSongAddedSubscription>;
+export const SetPlayedSongDocument = gql`
+    mutation setPlayedSong($id: String!) {
+  setPlayedSong(id: $id) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+    `;
+export type SetPlayedSongMutationFn = Apollo.MutationFunction<SetPlayedSongMutation, SetPlayedSongMutationVariables>;
+
+/**
+ * __useSetPlayedSongMutation__
+ *
+ * To run a mutation, you first call `useSetPlayedSongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetPlayedSongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setPlayedSongMutation, { data, loading, error }] = useSetPlayedSongMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSetPlayedSongMutation(baseOptions?: Apollo.MutationHookOptions<SetPlayedSongMutation, SetPlayedSongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetPlayedSongMutation, SetPlayedSongMutationVariables>(SetPlayedSongDocument, options);
+      }
+export type SetPlayedSongMutationHookResult = ReturnType<typeof useSetPlayedSongMutation>;
+export type SetPlayedSongMutationResult = Apollo.MutationResult<SetPlayedSongMutation>;
+export type SetPlayedSongMutationOptions = Apollo.BaseMutationOptions<SetPlayedSongMutation, SetPlayedSongMutationVariables>;
+export const SetRejectedSongDocument = gql`
+    mutation setRejectedSong($id: String!) {
+  setRejectedSong(id: $id) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+    `;
+export type SetRejectedSongMutationFn = Apollo.MutationFunction<SetRejectedSongMutation, SetRejectedSongMutationVariables>;
+
+/**
+ * __useSetRejectedSongMutation__
+ *
+ * To run a mutation, you first call `useSetRejectedSongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetRejectedSongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setRejectedSongMutation, { data, loading, error }] = useSetRejectedSongMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useSetRejectedSongMutation(baseOptions?: Apollo.MutationHookOptions<SetRejectedSongMutation, SetRejectedSongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetRejectedSongMutation, SetRejectedSongMutationVariables>(SetRejectedSongDocument, options);
+      }
+export type SetRejectedSongMutationHookResult = ReturnType<typeof useSetRejectedSongMutation>;
+export type SetRejectedSongMutationResult = Apollo.MutationResult<SetRejectedSongMutation>;
+export type SetRejectedSongMutationOptions = Apollo.BaseMutationOptions<SetRejectedSongMutation, SetRejectedSongMutationVariables>;
 export const GetAllEventsDocument = gql`
     query getAllEvents($filter: FilterInput) {
   events(filter: $filter) {
@@ -819,6 +1173,235 @@ export function useUpdateRoleMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdateRoleMutationHookResult = ReturnType<typeof useUpdateRoleMutation>;
 export type UpdateRoleMutationResult = Apollo.MutationResult<UpdateRoleMutation>;
 export type UpdateRoleMutationOptions = Apollo.BaseMutationOptions<UpdateRoleMutation, UpdateRoleMutationVariables>;
+export const GetEventBySlugDocument = gql`
+    query GetEventBySlug($slug: String!) {
+  eventBySlug(slug: $slug) {
+    id
+    slug
+    name
+    description
+    banner
+    logo
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useGetEventBySlugQuery__
+ *
+ * To run a query within a React component, call `useGetEventBySlugQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventBySlugQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventBySlugQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetEventBySlugQuery(baseOptions: Apollo.QueryHookOptions<GetEventBySlugQuery, GetEventBySlugQueryVariables> & ({ variables: GetEventBySlugQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventBySlugQuery, GetEventBySlugQueryVariables>(GetEventBySlugDocument, options);
+      }
+export function useGetEventBySlugLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventBySlugQuery, GetEventBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventBySlugQuery, GetEventBySlugQueryVariables>(GetEventBySlugDocument, options);
+        }
+export function useGetEventBySlugSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetEventBySlugQuery, GetEventBySlugQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEventBySlugQuery, GetEventBySlugQueryVariables>(GetEventBySlugDocument, options);
+        }
+export type GetEventBySlugQueryHookResult = ReturnType<typeof useGetEventBySlugQuery>;
+export type GetEventBySlugLazyQueryHookResult = ReturnType<typeof useGetEventBySlugLazyQuery>;
+export type GetEventBySlugSuspenseQueryHookResult = ReturnType<typeof useGetEventBySlugSuspenseQuery>;
+export type GetEventBySlugQueryResult = Apollo.QueryResult<GetEventBySlugQuery, GetEventBySlugQueryVariables>;
+export const GetEventBySlugWithSongsDocument = gql`
+    query GetEventBySlugWithSongs($slug: String!) {
+  eventBySlug(slug: $slug) {
+    id
+    slug
+    name
+    description
+    banner
+    logo
+    isOpenedToReceiveSuggestions
+    createdAt
+    updatedAt
+    songs {
+      artist
+      createdAt
+      duration
+      id
+      image
+      isPlayed
+      isRejected
+      name
+      suggestedById
+      suggestedByName
+      updatedAt
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetEventBySlugWithSongsQuery__
+ *
+ * To run a query within a React component, call `useGetEventBySlugWithSongsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetEventBySlugWithSongsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetEventBySlugWithSongsQuery({
+ *   variables: {
+ *      slug: // value for 'slug'
+ *   },
+ * });
+ */
+export function useGetEventBySlugWithSongsQuery(baseOptions: Apollo.QueryHookOptions<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables> & ({ variables: GetEventBySlugWithSongsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables>(GetEventBySlugWithSongsDocument, options);
+      }
+export function useGetEventBySlugWithSongsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables>(GetEventBySlugWithSongsDocument, options);
+        }
+export function useGetEventBySlugWithSongsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables>(GetEventBySlugWithSongsDocument, options);
+        }
+export type GetEventBySlugWithSongsQueryHookResult = ReturnType<typeof useGetEventBySlugWithSongsQuery>;
+export type GetEventBySlugWithSongsLazyQueryHookResult = ReturnType<typeof useGetEventBySlugWithSongsLazyQuery>;
+export type GetEventBySlugWithSongsSuspenseQueryHookResult = ReturnType<typeof useGetEventBySlugWithSongsSuspenseQuery>;
+export type GetEventBySlugWithSongsQueryResult = Apollo.QueryResult<GetEventBySlugWithSongsQuery, GetEventBySlugWithSongsQueryVariables>;
+export const SearchSpotifySongsDocument = gql`
+    mutation SearchSpotifySongs($query: String!) {
+  searchSpotify(query: $query) {
+    id
+    name
+    image
+    artist
+    duration_ms
+  }
+}
+    `;
+export type SearchSpotifySongsMutationFn = Apollo.MutationFunction<SearchSpotifySongsMutation, SearchSpotifySongsMutationVariables>;
+
+/**
+ * __useSearchSpotifySongsMutation__
+ *
+ * To run a mutation, you first call `useSearchSpotifySongsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSearchSpotifySongsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [searchSpotifySongsMutation, { data, loading, error }] = useSearchSpotifySongsMutation({
+ *   variables: {
+ *      query: // value for 'query'
+ *   },
+ * });
+ */
+export function useSearchSpotifySongsMutation(baseOptions?: Apollo.MutationHookOptions<SearchSpotifySongsMutation, SearchSpotifySongsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SearchSpotifySongsMutation, SearchSpotifySongsMutationVariables>(SearchSpotifySongsDocument, options);
+      }
+export type SearchSpotifySongsMutationHookResult = ReturnType<typeof useSearchSpotifySongsMutation>;
+export type SearchSpotifySongsMutationResult = Apollo.MutationResult<SearchSpotifySongsMutation>;
+export type SearchSpotifySongsMutationOptions = Apollo.BaseMutationOptions<SearchSpotifySongsMutation, SearchSpotifySongsMutationVariables>;
+export const OnSongUpdatedDocument = gql`
+    subscription onSongUpdated($eventId: String!) {
+  songUpdated(eventId: $eventId) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+    `;
+
+/**
+ * __useOnSongUpdatedSubscription__
+ *
+ * To run a query within a React component, call `useOnSongUpdatedSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOnSongUpdatedSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOnSongUpdatedSubscription({
+ *   variables: {
+ *      eventId: // value for 'eventId'
+ *   },
+ * });
+ */
+export function useOnSongUpdatedSubscription(baseOptions: Apollo.SubscriptionHookOptions<OnSongUpdatedSubscription, OnSongUpdatedSubscriptionVariables> & ({ variables: OnSongUpdatedSubscriptionVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<OnSongUpdatedSubscription, OnSongUpdatedSubscriptionVariables>(OnSongUpdatedDocument, options);
+      }
+export type OnSongUpdatedSubscriptionHookResult = ReturnType<typeof useOnSongUpdatedSubscription>;
+export type OnSongUpdatedSubscriptionResult = Apollo.SubscriptionResult<OnSongUpdatedSubscription>;
+export const CreateSongDocument = gql`
+    mutation CreateSong($input: CreateSongInput!) {
+  createSong(input: $input) {
+    id
+    artist
+    createdAt
+    duration
+    image
+    isPlayed
+    isRejected
+    name
+    suggestedById
+    suggestedByName
+    updatedAt
+  }
+}
+    `;
+export type CreateSongMutationFn = Apollo.MutationFunction<CreateSongMutation, CreateSongMutationVariables>;
+
+/**
+ * __useCreateSongMutation__
+ *
+ * To run a mutation, you first call `useCreateSongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSongMutation, { data, loading, error }] = useCreateSongMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateSongMutation(baseOptions?: Apollo.MutationHookOptions<CreateSongMutation, CreateSongMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSongMutation, CreateSongMutationVariables>(CreateSongDocument, options);
+      }
+export type CreateSongMutationHookResult = ReturnType<typeof useCreateSongMutation>;
+export type CreateSongMutationResult = Apollo.MutationResult<CreateSongMutation>;
+export type CreateSongMutationOptions = Apollo.BaseMutationOptions<CreateSongMutation, CreateSongMutationVariables>;
 export const GetMyProfileDocument = gql`
     query GetMyProfile {
   profile {

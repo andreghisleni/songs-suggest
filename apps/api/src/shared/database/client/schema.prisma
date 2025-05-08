@@ -2,8 +2,9 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/shared/database/client"
+  provider      = "prisma-client-js"
+  output        = "../src/shared/database/client"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -108,10 +109,11 @@ model Event {
 model Song {
   id String @id @default(uuid())
 
-  name     String
-  artist   String
-  album    String?
-  duration Int
+  spotifyId String  @map("spotify_id")
+  name      String
+  artist    String
+  image     String?
+  duration  Int
 
   eventId String @map("event_id")
   event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)

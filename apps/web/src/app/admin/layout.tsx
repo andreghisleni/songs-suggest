@@ -1,22 +1,26 @@
-import { application } from '@full-stack/authorization';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
-import { getCookie } from 'cookies-next';
-import { cookies } from 'next/headers';
-import { getUserServer } from '@/utils/get-server';
-import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/sidebar/app-sidebar';
-import { Separator } from '@/components/ui/separator';
+import { application } from "@full-stack/authorization";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { getCookie } from "cookies-next";
+import { cookies } from "next/headers";
+import { getUserServer } from "@/utils/get-server";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { Separator } from "@/components/ui/separator";
 
-import { BreadcrumbSidebar } from '@/components/sidebar/breadcrumb-sidebar';
-import { SideNavAdminItens } from './constants-new';
+import { BreadcrumbSidebar } from "@/components/sidebar/breadcrumb-sidebar";
+import { SideNavAdminItens } from "./constants-new";
 
 export default function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userRole = getCookie('user-role', { cookies });
+  const userRole = getCookie("user-role", { cookies });
 
   const user = getUserServer();
 
@@ -31,8 +35,8 @@ export default function AppLayout({
         const groups = SideNavAdminItens({
           app: {
             user: {
-              id: ur?.id || '',
-              role: (ur?.role as application.Role) || 'DEFAULT',
+              id: ur?.id || "",
+              role: (ur?.role as application.Role) || "DEFAULT",
             },
           },
         });

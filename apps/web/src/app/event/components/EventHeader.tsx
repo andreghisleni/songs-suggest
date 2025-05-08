@@ -3,12 +3,14 @@ interface EventHeaderProps {
   eventName: string;
   bannerUrl: string | null;
   logoUrl: string | null;
+  description?: string | null;
 }
 
 export default function EventHeader({
   eventName,
   bannerUrl,
   logoUrl,
+  description,
 }: EventHeaderProps) {
   return (
     <header className="relative text-white mb-8">
@@ -45,7 +47,7 @@ export default function EventHeader({
               {eventName}
             </h1>
             <p className="text-spotify-light-gray mt-1 text-lg">
-              Ajude a criar a playlist perfeita!
+              {description || "Descrição do evento não disponível."}
             </p>
           </div>
         </div>
