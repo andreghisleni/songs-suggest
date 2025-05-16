@@ -12,3 +12,7 @@
   - [ ] the people can suggest musics without authentication but need a fake authentication with just people name
     - people name
     - people uuid (saved just on user device)
+
+
+
+    teste
